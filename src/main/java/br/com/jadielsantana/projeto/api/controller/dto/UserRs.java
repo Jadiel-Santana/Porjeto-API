@@ -8,7 +8,7 @@ public class UserRs {
     private String senha;
 
     public static UserRs converter(User u) {
-        var user = new UserRs();
+        UserRs user = new UserRs();
         user.setId(u.getId());
         user.setNome(u.getNome());
         user.setSenha(u.getSenha());

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -20,7 +21,7 @@ public class UserController {
 
     @GetMapping("/")
     public List<UserRs> findAll() {
-        var pessoas = repository.findAll();
+        List<User> pessoas = repository.findAll();
         return pessoas
                 .stream()
                 .map(UserRs::converter)
@@ -29,14 +30,14 @@ public class UserController {
 
     @GetMapping("/{id}")
     public UserRs findById(@PathVariable("id") Long id) {
-        var user = repository.findById(id);
+        Optional<User> user = repository.findById(id);
         return user.map(UserRs::converter).orElse(null);
     }
 
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
     public void save(@RequestBody UserRq user) {
-        var u = new User();
+        User u = new User();
         u.setNome(user.getNome());
         u.setSenha(user.getSenha());
         repository.save(u);
@@ -44,10 +45,10 @@ public class UserController {
 
     @PutMapping("/update/{id}")
     public void update(@PathVariable("id") Long id, @RequestBody UserRq user) throws Exception {
-        var p = repository.findById(id);
+        Optional<User> p = repository.findById(id);
 
         if (p.isPresent()) {
-            var userSave = p.get();
+            User userSave = p.get();
             userSave.setNome(user.getNome());
             userSave.setSenha(user.getSenha());
             repository.save(userSave);
